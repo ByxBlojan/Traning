@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0b0f"><title>Träningsdagbok</title>
+<style>
+:root{--bg:#0b0b0f;--c:#17171d;--c2:#24242d;--t:#f4f4f6;--m:#8b8b98;--a:#c6ff3d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--t);font:16px -apple-system,system-ui,"Helvetica Neue",sans-serif;padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+#v{padding:16px;max-width:560px;margin:auto}h1{font-size:28px;margin:6px 0 14px}h2{font-size:13px;color:var(--m);text-transform:uppercase;letter-spacing:.08em;margin:20px 0 8px}
+.card{background:var(--c);border-radius:18px;padding:14px;margin-bottom:12px}
+button{font:inherit;color:var(--t);background:var(--c2);border:0;border-radius:14px;padding:14px 16px;min-height:48px}
+.p{background:var(--a);color:#000;font-weight:700;width:100%;font-size:17px;margin-bottom:10px}.s{width:100%;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.ch{border-radius:99px;padding:10px 16px;min-height:44px}.ch.on{background:var(--a);color:#000;font-weight:600}
+input,select,textarea{font:inherit;background:var(--c2);color:var(--t);border:0;border-radius:12px;padding:12px;width:100%;min-height:46px}
+.r{display:grid;grid-template-columns:28px 1fr 1fr 52px 36px;gap:8px;align-items:center;margin:8px 0}.r input{text-align:center}
+.ok{background:var(--c2);padding:0}.ok.d{background:var(--a);color:#000}.m{color:var(--m);font-size:14px}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#111116ee;backdrop-filter:blur(14px);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;background:none;font-size:12px;color:var(--m);padding:8px 2px}nav button.on{color:var(--a)}nav b{display:block;font-size:20px}
+#pk{position:fixed;inset:0;background:var(--bg);z-index:20;overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px 40px}
+.ex{display:flex;gap:12px;align-items:center}.ex svg{flex:none;width:56px;height:56px;background:var(--c2);border-radius:12px}
+details summary{list-style:none}details{margin-bottom:10px}.pr{color:var(--a);font-weight:700}
+</style></head><body><div id="v"></div><div id="pkw"></div>
+<nav id="nv"></nav>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SB_URL='https://turrxyczyojopnoyubfd.supabase.co',SB_KEY='sb_publishable_lixsVyEGF91MrjUlAJj7og_-kL44Rwp';
+let sb=null,U=null,SYNC='',tm;try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){}
+const G=['Bröst','Rygg','Axlar','Biceps','Triceps','Ben','Mage','Kardio'],CT=['Löpband','Löpning ute','Promenad','Motionscykel','Crosstrainer','Roddmaskin','Trappmaskin','Annan'],EQL=['Skivstång','Hantlar','Maskin','Kabel','Kroppsvikt'];
+const E=`Bänkpress|Bröst|Skivstång|3×6–10|Ligg på bänk, sänk stången kontrollerat till bröstet och pressa upp.
+Hantelpress|Bröst|Hantlar|3×8–12|Pressa hantlarna rakt upp från brösthöjd, sänk långsamt.
+Bröstpress maskin|Bröst|Maskin|3×10–12|Sitt med ryggen mot stödet och pressa handtagen framåt.
+Kabelflyes|Bröst|Kabel|3×12–15|Dra kablarna i en båge framför bröstet med lätt böjda armar.
+Armhävningar|Bröst|Kroppsvikt|3×8–15|Hålla kroppen rak, sänk bröstet mot golvet och tryck upp.
+Latsdrag|Rygg|Kabel|3×8–12|Dra stången till övre bröstet, för ihop skulderbladen.
+Sittande kabelrodd|Rygg|Kabel|3×10–12|Dra handtaget mot magen med rak rygg.
+Marklyft|Rygg|Skivstång|3×5–8|Rak rygg, pressa golvet ifrån dig och res dig upp med höfterna.
+Hantelrodd|Rygg|Hantlar|3×8–12|Stöd en hand på bänk, dra hanteln mot höften.
+Hakdrag|Rygg|Kroppsvikt|3×5–10|Häng i stången och dra upp hakan över den.
+Axelpress med hantlar|Axlar|Hantlar|3×8–12|Pressa hantlarna rakt upp från axelhöjd.
+Axelpress maskin|Axlar|Maskin|3×10–12|Pressa handtagen uppåt med ryggen mot stödet.
+Sidolyft|Axlar|Hantlar|3×12–15|Lyft hantlarna ut åt sidan till axelhöjd.
+Face pull|Axlar|Kabel|3×12–15|Dra repet mot ansiktet med armbågarna högt.
+Bicepscurl med hantlar|Biceps|Hantlar|3×8–12|Curla hantlarna utan att svinga med kroppen.
+Skivstångscurl|Biceps|Skivstång|3×8–12|Curla stången upp med armbågarna vid sidan.
+Kabelcurl|Biceps|Kabel|3×10–15|Curla handtaget mot axeln mot jämnt motstånd.
+Hammercurl|Biceps|Hantlar|3×10–12|Curla med tummarna uppåt.
+Triceps pushdown med rep|Triceps|Kabel|3×10–12|Armbågar vid sidan, pressa ner repet och dra isär ändarna.
+Triceps pushdown med rak stång|Triceps|Kabel|2–3×12–15|Pressa stången ner tills armarna är raka.
+Overhead triceps extension|Triceps|Kabel|3×10–12|Armbågarna pekar upp, sträck armarna framåt/uppåt.
+Skull crushers|Triceps|Skivstång|3×8–12|Ligg på bänk, sänk stången mot pannan och sträck armarna.
+Dips|Triceps|Kroppsvikt|3×6–12|Sänk kroppen mellan stöden, pressa upp. Extra vikt är valfritt.
+Knäböj|Ben|Skivstång|3×5–10|Stången på ryggen, böj knän och höfter till parallellt, res dig.
+Benpress|Ben|Maskin|3×10–12|Pressa plattan ifrån dig utan att låsa knäna.
+Raka marklyft|Ben|Skivstång|3×8–10|Fäll höfterna bakåt med nästan raka ben, känn baksidan lår.
+Utfall|Ben|Hantlar|3×10 per ben|Kliv fram och sänk bakre knät mot golvet.
+Benspark|Ben|Maskin|3×12–15|Sträck knäna mot full sträckning.
+Planka|Mage|Kroppsvikt|3×30–60 s|Stöd på underarmar, håll kroppen rak.
+Hängande benlyft|Mage|Kroppsvikt|3×8–12|Häng och lyft benen framåt med kontroll.
+Kabelcrunch|Mage|Kabel|3×12–15|Knäa vid kabeln och rulla ihop överkroppen.`.split('\n').map(l=>{const a=l.split('|');return{n:a[0],g:a[1],eq:a[2],r:a[3],i:a[4]}});
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function ld(){let o={};try{o=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}return Object.assign({sessions:[],active:null,saved:[],favs:[],custom:[],rest:90},o)}
+let KEY='td';let S=ld(),T=0,SEL=[],GS=[],LEN='n',EQ=[],GEN=null,PK=null,SUM=null,TXT='';
+const sv=()=>{S.dirty=1;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,1500)};
+async function push(){if(!sb||!U)return;try{const r=await sb.from('diary').upsert({user_id:U.id,data:Object.assign({},S,{dirty:0}),updated_at:new Date().toISOString()});if(r.error)throw r.error;S.dirty=0;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}SYNC='Synkad ✓'}catch(e){SYNC='Ingen kontakt – sparas på enheten och synkas senare'}const el=$('#sy');if(el)el.textContent=SYNC}
+async function pull(){try{const r=await sb.from('diary').select('data').eq('user_id',U.id).maybeSingle();if(r.error)throw r.error;const R=r.data&&r.data.data;if(!R){await push();return}
+if(S.dirty){const ids=new Set(S.sessions.map(x=>x.id));(R.sessions||[]).forEach(x=>{if(!ids.has(x.id))S.sessions.push(x)});S.sessions.sort((a,b)=>a.start-b.start);S.favs=[...new Set(S.favs.concat(R.favs||[]))];(R.custom||[]).forEach(c=>{if(!S.custom.some(d=>d.n==c.n))S.custom.push(c)});(R.saved||[]).forEach(c=>{if(!S.saved.some(d=>d.name==c.name))S.saved.push(c)});if(!S.active&&R.active)S.active=R.active;await push()}
+else{S=Object.assign(ld(),R,{dirty:0});try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}SYNC='Synkad ✓'}catch(e){SYNC='Ingen kontakt – sparas på enheten och synkas senare'}}
+async function enter(u){U=u;KEY='td_'+u.id;S=ld();await pull();render()}
+async function auth(n){const e=$('#em').value.trim(),p=$('#pw').value,m=$('#am');m.textContent='Vänta…';let r;try{r=n?await sb.auth.signUp({email:e,password:p}):await sb.auth.signInWithPassword({email:e,password:p})}catch(x){m.textContent='Ingen kontakt med servern';return}if(r.error){m.textContent=r.error.message;return}if(!r.data.session){m.textContent='Konto skapat. Bekräfta via mejlet och logga sedan in.';return}await enter(r.data.session.user)}
+async function out(){await push();try{await sb.auth.signOut()}catch(e){}try{localStorage.removeItem(KEY)}catch(e){}U=null;KEY='td';S=ld();render()}
+function vLogin(){return`<h1>Träningsdagbok</h1><div class="card"><input id="em" type="email" placeholder="E-post" autocomplete="email"><br><br><input id="pw" type="password" placeholder="Lösenord (minst 6 tecken)" autocomplete="current-password"><br><br><button class="p" onclick="auth(0)">LOGGA IN</button><button class="s" onclick="auth(1)">SKAPA KONTO</button><div class="m" id="am"></div></div>`}
+const ALL=()=>E.concat(S.custom),info=n=>ALL().find(e=>e.n==n)||{n,g:'',eq:'',r:'',i:''};
+const e1=(w,r)=>(+w||0)*(1+(+r||0)/30);
+const lastOf=n=>{for(let i=S.sessions.length-1;i>=0;i--){const x=S.sessions[i].ex.find(e=>e.n==n);if(x&&x.sets.length)return x.sets}return null};
+const bestOf=n=>{let b=0;S.sessions.forEach(s=>s.ex.forEach(e=>{if(e.n==n)e.sets.forEach(t=>b=Math.max(b,e1(t.w,t.r)))}));return b};
+const dt=t=>new Date(t).toLocaleDateString('sv-SE',{day:'numeric',month:'short'});
+const IMG='<svg viewBox="0 0 56 56"><g stroke="#8b8b98" stroke-width="3" stroke-linecap="round"><path d="M14 28h28M10 20v16M18 17v22M38 17v22M46 20v16"/></g></svg>';
+function mk(groups,names){return{id:Date.now(),start:Date.now(),groups,ex:names.map(n=>({n,sets:setsFor(n)})),cardio:[]}}
+function setsFor(n){const l=lastOf(n);return l?l.map(s=>({w:s.w,r:s.r,d:0})):[0,1,2].map(()=>({w:'',r:'',d:0}))}
+function start(groups,names){S.active=mk(groups,names||[]);GEN=null;T=0;sv();render()}
+function addEx(n){const a=S.active,g=info(n).g;a.ex.push({n,sets:setsFor(n)});if(g&&!a.groups.includes(g))a.groups.push(g);sv()}
+function up(i,j,k,v){S.active.ex[i].sets[j][k]=v===''?'':+v;sv()}
+function tg(i,j){const s=S.active.ex[i].sets,x=s[j];x.d=x.d?0:1;if(x.d){if(s[j+1]&&s[j+1].w===''&&s[j+1].r==='')s[j+1].w=x.w,s[j+1].r=x.r}sv();render()}
+function addSet(i){const s=S.active.ex[i].sets,l=s[s.length-1]||{w:'',r:''};s.push({w:l.w,r:l.r,d:0});sv();render()}
+function delSet(i,j){S.active.ex[i].sets.splice(j,1);sv();render()}
+function addCardio(){const c={t:$('#ct').value,m:+$('#cm').value||0,k:+$('#ck').value||0,l:$('#cl').value};if(!c.m&&!c.k)return;S.active.cardio.push(c);sv();render()}
+function fin(){const a=S.active,ex=a.ex.map(e=>({n:e.n,sets:e.sets.filter(s=>s.d)})).filter(e=>e.sets.length),prs=[];let vol=0,sets=0;
+ex.forEach(e=>{const pb=bestOf(e.n);let nb=0,top;e.sets.forEach(s=>{vol+=(+s.w||0)*(+s.r||0);sets++;const v=e1(s.w,s.r);if(v>nb){nb=v;top=s}});if(pb>0&&nb>pb)prs.push(e.n+': '+top.w+' kg × '+top.r)});
+SUM={s:{id:a.id,start:a.start,end:Date.now(),groups:a.groups,ex,cardio:a.cardio,note:''},prs,vol,sets};render()}
+function done(){SUM.s.note=$('#nt').value;S.sessions.push(SUM.s);S.active=null;SUM=null;T=3;sv();render()}
+function gen(){const per={k:2,n:3,l:4}[LEN],gs=GS.length?GS:['Bröst'],out=[];
+const pools=gs.map(g=>{let p=ALL().filter(e=>e.g==g&&(!EQ.length||EQ.includes(e.eq)));if(!p.length)p=ALL().filter(e=>e.g==g);return p.sort(()=>Math.random()-.5)});
+for(let k=0;k<per;k++)pools.forEach(p=>{if(p[k]&&out.length<8)out.push(p[k].n)});GEN={g:gs,ex:out};render()}
+function swap(i){const o=info(GEN.ex[i]),c=ALL().filter(e=>e.g==o.g&&!GEN.ex.includes(e.n)&&(!EQ.length||EQ.includes(e.eq)));if(!c.length)return;GEN.ex[i]=c[Math.floor(Math.random()*c.length)].n;render()}
+function pick(cb){PK={g:'Bröst',q:'',cb};render()}
+function pl(){const q=PK.q.toLowerCase(),L=ALL().map((e,k)=>[e,k]).filter(([e])=>q?e.n.toLowerCase().includes(q):e.g==PK.g).sort((a,b)=>S.favs.includes(b[0].n)-S.favs.includes(a[0].n));
+return L.map(([e,k])=>`<div class="card ex" onclick="pk(${k})">${IMG}<div style="flex:1"><b>${esc(e.n)}</b><div class="m">${esc(e.eq)} · ${esc(e.r)}</div></div><button onclick="event.stopPropagation();fav(${k})">${S.favs.includes(e.n)?'★':'☆'}</button></div>`).join('')||'<p class="m">Inga träffar</p>'}
+function pk(k){const n=ALL()[k].n,cb=PK.cb;PK=null;cb(n);sv();render()}
+function fav(k){const n=ALL()[k].n,i=S.favs.indexOf(n);i<0?S.favs.push(n):S.favs.splice(i,1);sv();$('#pl').innerHTML=pl()}
+function own(){const n=prompt('Namn på övningen?');if(!n)return;S.custom.push({n,g:PK.g,eq:'Annat',r:'3×8–12',i:'Egen övning.'});sv();$('#pl').innerHTML=pl()}
+const tog=(a,v)=>{const i=a.indexOf(v);i<0?a.push(v):a.splice(i,1);render()};
+const chips=(L,a,f)=>`<div class="chips">${L.map(x=>`<button class="ch ${a.includes(x)?'on':''}" onclick="${f}('${x}')">${x}</button>`).join('')}</div>`;
+function vTr(){const a=S.active;
+if(SUM){const s=SUM.s;return`<h1>Bra jobbat!</h1><div class="card"><div class="row"><span>${dt(s.start)}</span><span>${Math.max(1,Math.round((s.end-s.start)/6e4))} min</span></div><p>${s.groups.join(' + ')||'Pass'}<br>${s.ex.length} övningar · ${SUM.sets} set · ${Math.round(SUM.vol)} kg volym${s.cardio.length?'<br>Kardio: '+s.cardio.map(c=>c.t+' '+c.m+' min').join(', '):''}</p>${SUM.prs.map(p=>`<div class="pr">NYTT REKORD! ${esc(p)}</div>`).join('')}</div><textarea id="nt" rows="3" placeholder="Anteckningar"></textarea><br><br><button class="p" onclick="done()">SPARA PASSET</button><button class="s" onclick="SUM=null;render()">Tillbaka</button>`}
+if(!a){const l=S.sessions[S.sessions.length-1],w=S.sessions.filter(s=>s.start>Date.now()-6048e5).length;
+return`<h1>Träna</h1><h2>Välj muskelgrupper</h2>${chips(G,SEL,'tg2')}<br><button class="p" onclick="start(SEL.slice(),[]);SEL=[]">STARTA TRÄNING</button><button class="s" onclick="T=1;render()">SKAPA ETT TRÄNINGSPASS</button>
+${l?`<div class="card m">Senaste passet: <b style="color:var(--t)">${l.groups.join(' + ')||'Pass'}</b>, ${dt(l.start)}<br>Denna vecka: ${w} träningspass</div>`:''}
+${S.favs.length?`<h2>Favoritövningar</h2><div class="chips">${S.favs.map(n=>`<button class="ch" onclick="start([info('${n}').g],['${n}'])">${esc(n)}</button>`).join('')}</div>`:''}`}
+const mins=Math.round((Date.now()-a.start)/6e4);
+return`<div class="row"><h1>${a.groups.join(' + ')||'Pass'}</h1><span class="m">${mins} min</span></div>
+${a.ex.map((e,i)=>{const l=lastOf(e.n),o=info(e.n);return`<div class="card"><details><summary class="ex">${IMG}<div style="flex:1"><b>${esc(e.n)}</b><div class="m">${l?'Senast: '+l[0].w+' kg × '+l[0].r:'Ingen historik'}</div></div></summary><p class="m">${esc(o.eq)} · ${esc(o.r)}<br>${esc(o.i)}</p></details>
+${e.sets.map((s,j)=>`<div class="r"><span class="m">${j+1}</span><input type="number" inputmode="decimal" placeholder="kg" value="${s.w}" onchange="up(${i},${j},'w',this.value)"><input type="number" inputmode="numeric" placeholder="reps" value="${s.r}" onchange="up(${i},${j},'r',this.value)"><button class="ok ${s.d?'d':''}" onclick="tg(${i},${j})">✓</button><button onclick="delSet(${i},${j})" style="padding:0">✕</button></div>`).join('')}
+<button class="s" onclick="addSet(${i})">+ LÄGG TILL SET</button></div>`}).join('')}
+<button class="s" onclick="pick(n=>addEx(n))">+ Lägg till övning</button>
+<details class="card"><summary><b>+ Kardio</b></summary><br><select id="ct">${CT.map(c=>`<option>${c}</option>`).join('')}</select><br><br><div class="row"><input id="cm" type="number" inputmode="decimal" placeholder="minuter"><input id="ck" type="number" inputmode="decimal" placeholder="km"><input id="cl" placeholder="lutning %"></div><br><button class="s" onclick="addCardio()">Spara kardio</button></details>
+${a.cardio.map((c,i)=>`<div class="card row"><span>${c.t}: ${c.m} min${c.k?', '+c.k+' km':''}</span><button onclick="S.active.cardio.splice(${i},1);sv();render()">✕</button></div>`).join('')}
+<button class="p" onclick="fin()">AVSLUTA PASS</button><button class="s" onclick="if(confirm('Kasta passet?')){S.active=null;sv();render()}">Avbryt pass</button>`}
+const tg2=v=>tog(SEL,v),tgG=v=>tog(GS,v),tgE=v=>tog(EQ,v);
+function vPass(){const g=GEN;
+return`<h1>Träningspass</h1><div class="card"><h2 style="margin-top:0">Muskelgrupp</h2>${chips(G.slice(0,7),GS,'tgG')}<h2>Längd</h2><div class="chips">${[['k','Kort 15–20 min'],['n','Normalt 30–45 min'],['l','Långt 45–60 min']].map(x=>`<button class="ch ${LEN==x[0]?'on':''}" onclick="LEN='${x[0]}';render()">${x[1]}</button>`).join('')}</div><h2>Utrustning (valfritt)</h2>${chips(EQL,EQ,'tgE')}<br><button class="p" onclick="gen()">SKAPA PASS</button></div>
+${g?`<h2>Ditt ${g.g.join(' + ').toLowerCase()}pass</h2>${g.ex.map((n,i)=>{const o=info(n);return`<div class="card ex">${IMG}<div style="flex:1"><b>${i+1}. ${esc(n)}</b><div class="m">${esc(o.r)} · ${esc(o.eq)}</div></div><button onclick="swap(${i})">Byt</button></div>`}).join('')}<button class="p" onclick="start(GEN.g,GEN.ex)">STARTA PASSET</button><button class="s" onclick="S.saved.push({name:GEN.g.join(' + ')+' pass',g:GEN.g,ex:GEN.ex.slice()});sv();render()">SPARA SOM FAVORIT</button>`:''}
+${S.saved.length?`<h2>Sparade pass</h2>${S.saved.map((p,i)=>`<div class="card"><b>${esc(p.name)}</b><div class="m">${p.ex.map(esc).join(', ')}</div><br><div class="row"><button onclick="start(S.saved[${i}].g,S.saved[${i}].ex)" class="p" style="margin:0">Starta</button><button onclick="S.saved.splice(${i},1);sv();render()">Ta bort</button></div></div>`).join('')}`:''}`}
+function vUtv(){const ns=[...new Set(S.sessions.flatMap(s=>s.ex.map(e=>e.n)))];if(!ns.length)return'<h1>Utveckling</h1><p class="m">Avsluta ditt första pass för att se statistik.</p>';
+if(!ns.includes(CHN))CHN=ns[0];const pts=S.sessions.map(s=>{const e=s.ex.find(x=>x.n==CHN);return e&&{t:s.start,v:Math.max(...e.sets.map(t=>e1(t.w,t.r))),b:e.sets.reduce((a,t)=>e1(t.w,t.r)>e1(a.w,a.r)?t:a)}}).filter(Boolean);
+const mx=Math.max(...pts.map(p=>p.v),1),mn=Math.min(...pts.map(p=>p.v)),X=i=>pts.length>1?10+i*300/(pts.length-1):160,Y=v=>120-(mx==mn?60:(v-mn)/(mx-mn)*100),b=pts.reduce((a,p)=>p.v>a.v?p:a);
+const wk=S.sessions.filter(s=>s.start>Date.now()-6048e5).length,mo=S.sessions.filter(s=>s.start>Date.now()-2592e6).length,vol=S.sessions.reduce((a,s)=>a+s.ex.reduce((x,e)=>x+e.sets.reduce((y,t)=>y+(+t.w||0)*(+t.r||0),0),0),0);
+return`<h1>Utveckling</h1><div class="card row"><div><b style="font-size:26px">${wk}</b><div class="m">pass i veckan</div></div><div><b style="font-size:26px">${mo}</b><div class="m">senaste 30 d</div></div><div><b style="font-size:26px">${Math.round(vol/1000)}</b><div class="m">ton totalt</div></div></div>
+<select onchange="CHN=this.value;render()">${ns.map(n=>`<option ${n==CHN?'selected':''}>${esc(n)}</option>`).join('')}</select><br><br><div class="card"><div class="m">Uppskattad maxstyrka (1RM, kg)</div><svg viewBox="0 0 320 140" width="100%"><polyline fill="none" stroke="#c6ff3d" stroke-width="3" points="${pts.map((p,i)=>X(i)+','+Y(p.v)).join(' ')}"/>${pts.map((p,i)=>`<circle cx="${X(i)}" cy="${Y(p.v)}" r="4" fill="#c6ff3d"/>`).join('')}</svg><div class="m">Personligt rekord: <span class="pr">${b.b.w} kg × ${b.b.r}</span> (${Math.round(b.v)} kg uppsk. 1RM)</div></div>
+${pts.slice(-6).reverse().map(p=>`<div class="row card"><span>${dt(p.t)}</span><b>${p.b.w} kg × ${p.b.r}</b></div>`).join('')}`}
+let CHN='';
+function vHis(){return`<h1>Historik</h1>${S.sessions.length?S.sessions.slice().reverse().map(s=>{const i=S.sessions.indexOf(s);return`<details class="card"><summary class="row"><b>${s.groups.join(' + ')||'Pass'}</b><span class="m">${dt(s.start)} · ${s.ex.length} övn.</span></summary><br>${s.ex.map(e=>`<p><b>${esc(e.n)}</b><br><span class="m">${e.sets.map(t=>t.w+'×'+t.r).join(' · ')}</span></p>`).join('')}${s.cardio.map(c=>`<p>${c.t}: ${c.m} min${c.k?', '+c.k+' km':''}</p>`).join('')}${s.note?`<p class="m">${esc(s.note)}</p>`:''}<button onclick="if(confirm('Ta bort passet?')){S.sessions.splice(${i},1);sv();render()}">Ta bort</button></details>`}).join(''):'<p class="m">Inga pass ännu.</p>'}
+<h2>Säkerhetskopia (data finns endast på den här enheten)</h2><textarea id="bk" rows="3">${esc(TXT)}</textarea><br><br><div class="row"><button class="s" onclick="TXT=JSON.stringify(S);render();try{navigator.clipboard.writeText(TXT)}catch(e){}">Exportera</button><button class="s" onclick="try{S=Object.assign(ld(),JSON.parse($('#bk').value));sv();render()}catch(e){alert('Ogiltig data')}">Importera</button></div><br><div class="m" id="sy">${SYNC}</div>${U?`<br><button class="s" onclick="out()">Logga ut (${esc(U.email)})</button>`:''}`}
+function render(){if(sb&&!U){$('#v').innerHTML=vLogin();$('#nv').innerHTML='';$('#pkw').innerHTML='';return}$('#v').innerHTML=[vTr,vPass,vUtv,vHis][T]();
+$('#nv').innerHTML=[['🏋️','Träna'],['⚡','Träningspass'],['📈','Utveckling'],['🗓️','Historik']].map((x,i)=>`<button class="${T==i?'on':''}" onclick="T=${i};SUM=null;render();scrollTo(0,0)"><b>${x[0]}</b>${x[1]}</button>`).join('');
+$('#pkw').innerHTML=PK?`<div id="pk"><div class="row"><h1>Välj övning</h1><button onclick="PK=null;render()">Stäng</button></div><input placeholder="Sök övning" value="${esc(PK.q)}" oninput="PK.q=this.value;$('#pl').innerHTML=pl()"><br><br><div class="chips">${G.slice(0,7).map(g=>`<button class="ch ${PK.g==g?'on':''}" onclick="PK.g='${g}';PK.q='';render()">${g}</button>`).join('')}</div><br><div id="pl">${pl()}</div><button class="s" onclick="own()">+ Egen övning</button></div>`:''
+}
+(async()=>{if(sb){try{const r=await sb.auth.getSession();if(r.data.session)await enter(r.data.session.user)}catch(e){}}render()})();
+</script></body></html>
