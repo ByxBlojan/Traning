@@ -21,6 +21,7 @@ nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(9,9,11,.
 nav button{flex:1;border:0;font-size:13px;color:var(--m);padding:10px 2px;border-radius:8px}nav button.on{color:var(--t);background:var(--c2)}
 #pk{position:fixed;inset:0;background:var(--bg);z-index:20;overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px 40px}
 .ex{display:flex;gap:12px;align-items:center}.ex svg{flex:none;width:52px;height:52px;background:var(--c2);border:1px solid var(--bd);border-radius:8px}
+.fg{display:block;width:100%;max-width:280px;height:auto;margin:10px auto;background:var(--c2);border:1px solid var(--bd);border-radius:8px}
 details summary{list-style:none}details summary::-webkit-details-marker{display:none}details{margin-bottom:10px}.pr{color:var(--t);font-weight:600}
 </style></head><body><header id="hd"></header><div id="v"></div><div id="pkw"></div>
 <nav id="nv"></nav>
@@ -79,7 +80,40 @@ const e1=(w,r)=>(+w||0)*(1+(+r||0)/30);
 const lastOf=n=>{for(let i=S.sessions.length-1;i>=0;i--){const x=S.sessions[i].ex.find(e=>e.n==n);if(x&&x.sets.length)return x.sets}return null};
 const bestOf=n=>{let b=0;S.sessions.forEach(s=>s.ex.forEach(e=>{if(e.n==n)e.sets.forEach(t=>b=Math.max(b,e1(t.w,t.r)))}));return b};
 const dt=t=>new Date(t).toLocaleDateString('sv-SE',{day:'numeric',month:'short'});
-const IMG='<svg viewBox="0 0 56 56"><g stroke="#8b8b98" stroke-width="3" stroke-linecap="round"><path d="M14 28h28M10 20v16M18 17v22M38 17v22M46 20v16"/></g></svg>';
+const BODY='<g fill="#2a2a31"><circle cx="30" cy="9" r="7"/><path d="M13 20Q30 15 47 20L42 62L18 62Z"/></g><g stroke="#2a2a31" stroke-linecap="round" fill="none"><path d="M9 25L7 46M51 25L53 46" stroke-width="9"/><path d="M7 49L6 69M53 49L54 69" stroke-width="7"/><path d="M24 64L23 93M36 64L37 93" stroke-width="12"/><path d="M23 96L23 117M37 96L37 117" stroke-width="8"/></g>';
+const RG={
+chest:['f','<ellipse cx="23" cy="30" rx="8" ry="6.5" fill="{c}"/><ellipse cx="37" cy="30" rx="8" ry="6.5" fill="{c}"/>','u'],
+chin:['f','<ellipse cx="27.5" cy="30" rx="3.5" ry="5" fill="{c}"/><ellipse cx="32.5" cy="30" rx="3.5" ry="5" fill="{c}"/>','u'],
+delF:['f','<circle cx="13" cy="24" r="4.5" fill="{c}"/><circle cx="47" cy="24" r="4.5" fill="{c}"/>','u'],
+delS:['f','<circle cx="8.5" cy="25" r="3.6" fill="{c}"/><circle cx="51.5" cy="25" r="3.6" fill="{c}"/>','u'],
+biceps:['f','<path d="M9.5 29L8.5 43M50.5 29L51.5 43" stroke="{c}" stroke-width="5" stroke-linecap="round"/>','u'],
+fore:['f','<path d="M8 48L7 60M52 48L53 60" stroke="{c}" stroke-width="5" stroke-linecap="round"/>','u'],
+abs:['f','<rect x="25" y="38" width="10" height="22" rx="3" fill="{c}"/>','u'],
+quads:['f','<path d="M24 67L23.5 91M36 67L36.5 91" stroke="{c}" stroke-width="9" stroke-linecap="round"/>','l'],
+trap:['b','<path d="M23 18Q30 15 37 18L30 38Z" fill="{c}"/>','u'],
+lats:['b','<path d="M15 28L25 32 26 54 21 56ZM45 28L35 32 34 54 39 56Z" fill="{c}"/>','u'],
+midback:['b','<rect x="25" y="30" width="10" height="12" rx="2" fill="{c}"/>','u'],
+lowback:['b','<rect x="25" y="46" width="10" height="13" rx="2" fill="{c}"/>','u'],
+delR:['b','<circle cx="13" cy="24" r="4.5" fill="{c}"/><circle cx="47" cy="24" r="4.5" fill="{c}"/>','u'],
+triL:['b','<path d="M10.5 28L9.5 44M49.5 28L50.5 44" stroke="{c}" stroke-width="3.4" stroke-linecap="round"/>','u'],
+triS:['b','<path d="M7 28L6.5 44M53 28L53.5 44" stroke="{c}" stroke-width="3.2" stroke-linecap="round"/>','u'],
+glute:['b','<circle cx="25" cy="64" r="6.5" fill="{c}"/><circle cx="35" cy="64" r="6.5" fill="{c}"/>','l'],
+ham:['b','<path d="M24 72L23.5 91M36 72L36.5 91" stroke="{c}" stroke-width="9" stroke-linecap="round"/>','l']};
+const LB={chest:'bröst',chin:'inre bröst',delF:'främre axel',delS:'sidoaxel',delR:'bakre axel',biceps:'biceps',fore:'underarm',abs:'mage',quads:'framsida lår',ham:'baksida lår',glute:'säte',trap:'trapezius',lats:'breda ryggmuskeln',midback:'mellanrygg',lowback:'nedre rygg',triL:'triceps (långa huvudet)',triS:'triceps (laterala huvudet)'};
+const MP={'Bänkpress':[['chest'],['delF','triL','triS']],'Hantelpress':[['chest'],['delF','triL']],'Bröstpress maskin':[['chest'],['delF','triS']],'Kabelflyes':[['chin'],['chest','delF']],'Armhävningar':[['chest'],['delF','triL','abs']],
+'Latsdrag':[['lats'],['biceps','midback','delR']],'Sittande kabelrodd':[['midback','lats'],['biceps','delR']],'Marklyft':[['lowback','glute','ham'],['trap','quads']],'Hantelrodd':[['lats','midback'],['biceps','delR']],'Hakdrag':[['lats'],['biceps','midback']],
+'Axelpress med hantlar':[['delF','delS'],['triL','triS','trap']],'Axelpress maskin':[['delF','delS'],['triL','triS','trap']],'Sidolyft':[['delS'],['trap']],'Face pull':[['delR','midback'],['trap']],
+'Bicepscurl med hantlar':[['biceps'],['fore']],'Skivstångscurl':[['biceps'],['fore']],'Kabelcurl':[['biceps'],['fore']],'Hammercurl':[['biceps','fore'],[]],
+'Triceps pushdown med rep':[['triS'],['triL']],'Triceps pushdown med rak stång':[['triS'],['triL']],'Overhead triceps extension':[['triL'],['triS']],'Skull crushers':[['triL'],['triS']],'Dips':[['triS','triL'],['chest','delF']],
+'Knäböj':[['quads','glute'],['ham','lowback','abs']],'Benpress':[['quads'],['glute','ham']],'Raka marklyft':[['ham','glute'],['lowback']],'Utfall':[['quads','glute'],['ham']],'Benspark':[['quads'],[]],
+'Planka':[['abs'],['lowback','delF']],'Hängande benlyft':[['abs'],['quads']],'Kabelcrunch':[['abs'],[]]};
+const DEF={Bröst:[['chest'],['delF']],Rygg:[['lats','midback'],['biceps']],Axlar:[['delF','delS'],[]],Biceps:[['biceps'],['fore']],Triceps:[['triL','triS'],[]],Ben:[['quads','glute'],['ham']],Mage:[['abs'],[]]};
+const reg=n=>MP[n]||DEF[info(n).g]||[[],[]];
+function draw(P,S,v){let h=BODY;[[S,'#92522a'],[P,'#f97316']].forEach(([L,c])=>L.forEach(k=>{if(RG[k][0]==v)h+=RG[k][1].split('{c}').join(c)}));return h}
+function fig(n){const[P,S]=reg(n),v=P.length&&RG[P[0]][0]=='b'?'b':'f',z=new Set(P.map(k=>RG[k][2])),vb=z.size!=1?'0 2 60 122':z.has('l')?'0 54 60 66':'0 4 60 68';return`<svg viewBox="${vb}">${draw(P,S,v)}</svg>`}
+function big(n){const[P,S]=reg(n);return`<svg class="fg" viewBox="0 0 130 128"><g>${draw(P,S,'f')}</g><g transform="translate(70 0)">${draw(P,S,'b')}</g><text x="30" y="126" font-size="6" text-anchor="middle" fill="#71717a">Framsida</text><text x="100" y="126" font-size="6" text-anchor="middle" fill="#71717a">Baksida</text></svg>`}
+const tr=n=>reg(n)[0].map(k=>LB[k]).join(', ');
+const cap=n=>{const[P,S]=reg(n);return`<span style="color:#f97316">Tränar: ${P.map(k=>LB[k]).join(', ')||'–'}</span>${S.length?'<br>Hjälper till: '+S.map(k=>LB[k]).join(', '):''}`};
 function mk(groups,names){return{id:Date.now(),start:Date.now(),groups,ex:names.map(n=>({n,sets:setsFor(n)})),cardio:[]}}
 function setsFor(n){const l=lastOf(n);return l?l.map(s=>({w:s.w,r:s.r,d:0})):[0,1,2].map(()=>({w:'',r:'',d:0}))}
 function start(groups,names){S.active=mk(groups,names||[]);GEN=null;T=0;ST=0;SEL=[];sv();render()}
@@ -99,7 +133,7 @@ for(let k=0;k<per;k++)pools.forEach(p=>{if(p[k]&&out.length<8)out.push(p[k].n)})
 function swap(i){const o=info(GEN.ex[i]),c=ALL().filter(e=>e.g==o.g&&!GEN.ex.includes(e.n)&&(!EQ.length||EQ.includes(e.eq)));if(!c.length)return;GEN.ex[i]=c[Math.floor(Math.random()*c.length)].n;render()}
 function pick(cb){PK={g:'Bröst',q:'',cb};render()}
 function pl(){const q=PK.q.toLowerCase(),L=ALL().map((e,k)=>[e,k]).filter(([e])=>q?e.n.toLowerCase().includes(q):e.g==PK.g).sort((a,b)=>S.favs.includes(b[0].n)-S.favs.includes(a[0].n));
-return L.map(([e,k])=>`<div class="card ex" onclick="pk(${k})">${IMG}<div style="flex:1"><b>${esc(e.n)}</b><div class="m">${esc(e.eq)} · ${esc(e.r)}</div></div><button onclick="event.stopPropagation();fav(${k})">${S.favs.includes(e.n)?'★':'☆'}</button></div>`).join('')||'<p class="m">Inga träffar</p>'}
+return L.map(([e,k])=>`<div class="card ex" onclick="pk(${k})">${fig(e.n)}<div style="flex:1"><b>${esc(e.n)}</b><div class="m">${esc(e.eq)} · ${esc(e.r)}</div></div><button onclick="event.stopPropagation();fav(${k})">${S.favs.includes(e.n)?'★':'☆'}</button></div>`).join('')||'<p class="m">Inga träffar</p>'}
 function pk(k){const n=ALL()[k].n,cb=PK.cb;PK=null;cb(n);sv();render()}
 function fav(k){const n=ALL()[k].n,i=S.favs.indexOf(n);i<0?S.favs.push(n):S.favs.splice(i,1);sv();$('#pl').innerHTML=pl()}
 function own(){const n=prompt('Namn på övningen?');if(!n)return;S.custom.push({n,g:PK.g,eq:'Annat',r:'3×8–12',i:'Egen övning.'});sv();$('#pl').innerHTML=pl()}
@@ -121,7 +155,7 @@ if(x=='Axlar'&&g.includes('Bröst')){a=a.filter(n=>!n.startsWith('Axelpress'));n
 if(x=='Rygg'&&g.includes('Ben')){a=a.filter(n=>n!='Marklyft');notes.push('Rygg: inget marklyft, eftersom benpassets marklyft och böj redan belastar ländrygg och baksida lår.')}
 a.forEach(n=>{if(!L.includes(n))L.push(n)})});
 const k=L.join('|');if(L.length&&!seen.has(k)){seen.add(k);out.push({n:'Pass '+'ABC'[v],ex:L,notes:[...new Set(notes)]})}});return out}
-function vPassVal(){return`<button class="s" style="width:auto;padding:0 14px" onclick="ST=2;render()">← Tillbaka</button><h1>Välj pass</h1><p class="m">${SEL.join(' + ')}. Passen börjar med stora övningar, håller sig runt vanliga riktmärken (ungefär 10–20 set per muskelgrupp och vecka om du tränar gruppen 1–2 gånger) och undviker onödiga dubbletter när grupper överlappar. Det är generella rekommendationer, inte medicinsk rådgivning.</p>${PS.length?PS.map((p,i)=>{const tot=p.ex.reduce((a,n)=>a+(parseInt(info(n).r)||3),0);return`<div class="card"><div class="row"><b>${p.n}</b><span class="m">${tot} set · ca ${Math.round(tot*2.5)} min</span></div>${p.ex.map(n=>`<div class="ex" style="margin-top:10px">${IMG}<div><b>${esc(n)}</b><div class="m">${esc(info(n).r)} · ${esc(info(n).eq)}</div></div></div>`).join('')}${p.notes.map(t=>`<p class="m">• ${esc(t)}</p>`).join('')}<br><button class="p" onclick="start(SEL.slice(),PS[${i}].ex)">Starta pass</button></div>`}).join(''):'<p class="m">Inga färdiga pass för de valda grupperna. Använd Lägg till övning.</p>'}`}
+function vPassVal(){return`<button class="s" style="width:auto;padding:0 14px" onclick="ST=2;render()">← Tillbaka</button><h1>Välj pass</h1><p class="m">${SEL.join(' + ')}. Passen börjar med stora övningar, håller sig runt vanliga riktmärken (ungefär 10–20 set per muskelgrupp och vecka om du tränar gruppen 1–2 gånger) och undviker onödiga dubbletter när grupper överlappar. Det är generella rekommendationer, inte medicinsk rådgivning.</p>${PS.length?PS.map((p,i)=>{const tot=p.ex.reduce((a,n)=>a+(parseInt(info(n).r)||3),0);return`<div class="card"><div class="row"><b>${p.n}</b><span class="m">${tot} set · ca ${Math.round(tot*2.5)} min</span></div>${p.ex.map(n=>`<div class="ex" style="margin-top:10px">${fig(n)}<div><b>${esc(n)}</b><div class="m">${esc(info(n).r)} · ${esc(info(n).eq)}<br>${tr(n)}</div></div></div>`).join('')}${p.notes.map(t=>`<p class="m">• ${esc(t)}</p>`).join('')}<br><button class="p" onclick="start(SEL.slice(),PS[${i}].ex)">Starta pass</button></div>`}).join(''):'<p class="m">Inga färdiga pass för de valda grupperna. Använd Lägg till övning.</p>'}`}
 const cnt=t=>S.sessions.filter(x=>x.start>=t).length;
 function vHome(){const d=new Date(),w=new Date(d.getFullYear(),d.getMonth(),d.getDate()-((d.getDay()+6)%7)),l=S.sessions[S.sessions.length-1];
 return`<h2 style="margin-top:0">Antal pass</h2><div class="row" style="gap:8px;align-items:stretch">${[['Denna vecka',cnt(+w)],['Denna månad',cnt(+new Date(d.getFullYear(),d.getMonth(),1))],['I år',cnt(+new Date(d.getFullYear(),0,1))]].map(x=>`<div class="card" style="flex:1;text-align:center;margin:0"><div style="font-size:30px;font-weight:600;line-height:1.2">${x[1]}</div><div class="m">${x[0]}</div></div>`).join('')}</div><br><button class="p" style="min-height:52px;font-size:16px" onclick="SEL=[];ST=1;render()">Träna nu</button>
@@ -136,7 +170,7 @@ if(ST==3)return vPassVal();
 return vHome()}
 const mins=Math.round((Date.now()-a.start)/6e4);
 return`<div class="row"><h1>${a.groups.join(' + ')||'Pass'}</h1><span class="m">${mins} min</span></div>
-${a.ex.map((e,i)=>{const l=lastOf(e.n),o=info(e.n);return`<div class="card"><details><summary class="ex">${IMG}<div style="flex:1"><b>${esc(e.n)}</b><div class="m">${l?'Senast: '+l[0].w+' kg × '+l[0].r:'Ingen historik'}</div></div></summary><p class="m">${esc(o.eq)} · ${esc(o.r)}<br>${esc(o.i)}</p></details>
+${a.ex.map((e,i)=>{const l=lastOf(e.n),o=info(e.n);return`<div class="card"><details><summary class="ex">${fig(e.n)}<div style="flex:1"><b>${esc(e.n)}</b><div class="m">${l?'Senast: '+l[0].w+' kg × '+l[0].r:'Ingen historik'}</div></div></summary>${big(e.n)}<p class="m">${cap(e.n)}<br>${esc(o.eq)} · ${esc(o.r)}<br>${esc(o.i)}</p></details>
 ${e.sets.map((s,j)=>`<div class="r"><span class="m">${j+1}</span><input type="number" inputmode="decimal" placeholder="kg" value="${s.w}" onchange="up(${i},${j},'w',this.value)"><input type="number" inputmode="numeric" placeholder="reps" value="${s.r}" onchange="up(${i},${j},'r',this.value)"><button class="ok ${s.d?'d':''}" onclick="tg(${i},${j})">✓</button><button onclick="delSet(${i},${j})" style="padding:0">✕</button></div>`).join('')}
 <button class="s" onclick="addSet(${i})">+ LÄGG TILL SET</button></div>`}).join('')}
 <button class="s" onclick="pick(n=>addEx(n))">+ Lägg till övning</button>
@@ -146,7 +180,7 @@ ${a.cardio.map((c,i)=>`<div class="card row"><span>${c.t}: ${c.m} min${c.k?', '+
 const tg2=v=>tog(SEL,v),tgG=v=>tog(GS,v),tgE=v=>tog(EQ,v);
 function vPass(){const g=GEN;
 return`<h1>Träningspass</h1><div class="card"><h2 style="margin-top:0">Muskelgrupp</h2>${chips(G.slice(0,7),GS,'tgG')}<h2>Längd</h2><div class="chips">${[['k','Kort 15–20 min'],['n','Normalt 30–45 min'],['l','Långt 45–60 min']].map(x=>`<button class="ch ${LEN==x[0]?'on':''}" onclick="LEN='${x[0]}';render()">${x[1]}</button>`).join('')}</div><h2>Utrustning (valfritt)</h2>${chips(EQL,EQ,'tgE')}<br><button class="p" onclick="gen()">SKAPA PASS</button></div>
-${g?`<h2>Ditt ${g.g.join(' + ').toLowerCase()}pass</h2>${g.ex.map((n,i)=>{const o=info(n);return`<div class="card ex">${IMG}<div style="flex:1"><b>${i+1}. ${esc(n)}</b><div class="m">${esc(o.r)} · ${esc(o.eq)}</div></div><button onclick="swap(${i})">Byt</button></div>`}).join('')}<button class="p" onclick="start(GEN.g,GEN.ex)">STARTA PASSET</button><button class="s" onclick="S.saved.push({name:GEN.g.join(' + ')+' pass',g:GEN.g,ex:GEN.ex.slice()});sv();render()">SPARA SOM FAVORIT</button>`:''}
+${g?`<h2>Ditt ${g.g.join(' + ').toLowerCase()}pass</h2>${g.ex.map((n,i)=>{const o=info(n);return`<div class="card ex">${fig(n)}<div style="flex:1"><b>${i+1}. ${esc(n)}</b><div class="m">${esc(o.r)} · ${esc(o.eq)}</div></div><button onclick="swap(${i})">Byt</button></div>`}).join('')}<button class="p" onclick="start(GEN.g,GEN.ex)">STARTA PASSET</button><button class="s" onclick="S.saved.push({name:GEN.g.join(' + ')+' pass',g:GEN.g,ex:GEN.ex.slice()});sv();render()">SPARA SOM FAVORIT</button>`:''}
 ${S.saved.length?`<h2>Sparade pass</h2>${S.saved.map((p,i)=>`<div class="card"><b>${esc(p.name)}</b><div class="m">${p.ex.map(esc).join(', ')}</div><br><div class="row"><button onclick="start(S.saved[${i}].g,S.saved[${i}].ex)" class="p" style="margin:0">Starta</button><button onclick="S.saved.splice(${i},1);sv();render()">Ta bort</button></div></div>`).join('')}`:''}`}
 function vUtv(){const ns=[...new Set(S.sessions.flatMap(s=>s.ex.map(e=>e.n)))];if(!ns.length)return'<h1>Utveckling</h1><p class="m">Avsluta ditt första pass för att se statistik.</p>';
 if(!ns.includes(CHN))CHN=ns[0];const pts=S.sessions.map(s=>{const e=s.ex.find(x=>x.n==CHN);return e&&{t:s.start,v:Math.max(...e.sets.map(t=>e1(t.w,t.r))),b:e.sets.reduce((a,t)=>e1(t.w,t.r)>e1(a.w,a.r)?t:a)}}).filter(Boolean);
